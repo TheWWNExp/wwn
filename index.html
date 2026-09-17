@@ -38,9 +38,10 @@
     min-height:100vh;min-height:100dvh;position:relative;width:100%;
   }
 
-  /* ---------- TOP CROWN (home route only) ----------
-     Fades #540A10 into the artwork below; hidden on checkout/ticket/admin
-     so those routes keep their own system-bar tint. */
+  /* ---------- TOP CROWN — MOBILE ONLY, HOME ONLY ----------
+     Mobile: blends the system bar into the artwork.
+     Desktop: never rendered (the app paints the color behind its nav instead).
+     Checkout overlay: removed live via postMessage. */
   #topblend{
     display:none;
     position:fixed;top:0;left:0;right:0;z-index:5;pointer-events:none;
@@ -51,8 +52,9 @@
       rgba(84,10,16,.42) 66%,
       rgba(84,10,16,0) 100%);
   }
-  #topblend.on{display:block}
-  @media (min-width:901px){ #topblend.on{display:block} }
+  @media (max-width:900px){
+    #topblend.on{display:block}
+  }
 
   /* ---------- iframe ---------- */
   #frame{
@@ -150,29 +152,26 @@
   var f = document.getElementById('frame');
   var splash = document.getElementById('splash');
   var topblend = document.getElementById('topblend');
-  var themeMeta = document.getElementById('themeColor');
 
-  /* Route-aware system bar + crown logic */
   var ROUTE_COLORS = {
-    home:     '#540A10',  /* maroon artwork crown */
-    register: '#F7F8FA',  /* light checkout */
+    home:     '#540A10',
+    register: '#F7F8FA',
     checkout: '#F7F8FA',
-    ticket:   '#7A1616',  /* dark maroon ticket */
-    admin:    '#0B0B0B',  /* command center */
-    checkin:  '#540A10'   /* event day */
+    ticket:   '#7A1616',
+    admin:    '#0B0B0B',
+    checkin:  '#540A10'
   };
-  var barColor = ROUTE_COLORS[route] || ROUTE_COLORS.home;
-  var showCrown = (route === 'home');
+  var routeColor = ROUTE_COLORS[route] || ROUTE_COLORS.home;
+  var routeAllowsCrown = (route === 'home');
 
-  themeMeta.setAttribute('content', barColor);
-  document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
-    m.setAttribute('content', barColor);
-  });
-  if (showCrown) topblend.classList.add('on');
+  function setBar(c){
+    document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) { m.setAttribute('content', c); });
+  }
+  setBar(routeColor);
+  if (routeAllowsCrown) topblend.classList.add('on');
 
   f.src = EXEC + (qs || '?path=home');
 
-  /* Pixel-crisp end state */
   f.addEventListener('transitionend', function (e) {
     if (e.propertyName === 'transform') {
       f.style.transform = 'none';
@@ -180,16 +179,18 @@
     }
   });
 
-  /* Live theme sync from the app (overrides initial if set) */
+  /* Live coordination with the app inside the iframe */
   window.addEventListener('message', function (e) {
     var d = e.data;
-    if (d && typeof d.wwnTheme === 'string' && /^#[0-9a-fA-F]{6}$/.test(d.wwnTheme)) {
-      document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) { m.setAttribute('content', d.wwnTheme); });
+    if (!d || typeof d !== 'object') return;
+    if (typeof d.wwnTheme === 'string' && /^#[0-9a-fA-F]{6}$/.test(d.wwnTheme)) {
+      setBar(d.wwnTheme);
       document.documentElement.style.setProperty('--brand-top', d.wwnTheme);
+      topblend.style.background =
+        'linear-gradient(180deg,' + d.wwnTheme + ' 0%, rgba(84,10,16,.88) 34%, rgba(84,10,16,.42) 66%, rgba(84,10,16,0) 100%)';
     }
-    /* App can also request the crown be shown/hidden (e.g. on internal navigation) */
-    if (d && typeof d.wwnCrown === 'boolean') {
-      topblend.classList.toggle('on', d.wwnCrown);
+    if (typeof d.wwnCrown === 'boolean') {
+      topblend.classList.toggle('on', d.wwnCrown && routeAllowsCrown);
     }
   });
 
