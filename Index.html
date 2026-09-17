@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B0B0B">
+<meta name="description" content="Worship With Nature · Make room for presence. Free registration · October 10, 2026 · Abuja.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Worship With Nature · Make Room For Presence</title>
+
+<!-- Rich link previews (WhatsApp / iMessage / Telegram) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Worship With Nature · 2026">
+<meta property="og:description" content="Make room for presence. Free registration · October 10, 2026 · Abuja.">
+<meta property="og:image" content="og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+
+<!-- Speed: warm the connections before the app needs them -->
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Speed: fetch the mobile hero while the splash is showing -->
+<link rel="preload" as="image" href="https://drive.google.com/file/d/1V-lxy2TImlh8otgrFAELdPACU0MUq_fD/view?usp=drive_link">
+
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#0B0B0B;overscroll-behavior:none}
+  body{position:fixed;inset:0;width:100%}
+  #frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#0B0B0B;
+    opacity:0;transition:opacity .45s ease}
+  #frame.on{opacity:1}
+  #splash{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:16px;background:#0B0B0B;color:#F3E5D3;
+    font-family:Manrope,-apple-system,BlinkMacSystemFont,sans-serif;transition:opacity .5s ease}
+  #splash.off{opacity:0;pointer-events:none}
+  .mark{width:58px;height:58px;border-radius:50%;border:1px solid #EE4B1F;display:grid;place-items:center;
+    font:800 .82rem/1 Manrope,sans-serif;color:#EE4B1F;animation:breathe 2.2s ease-in-out infinite}
+  @keyframes breathe{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7}}
+  .word{font:800 .66rem/1 Manrope,sans-serif;letter-spacing:.3em;text-transform:uppercase;color:rgba(243,229,211,.55)}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="splash"><div class="mark">WWN</div><span class="word">Make room for presence</span></div>
+<iframe id="frame" title="Worship With Nature"
+        allow="camera; microphone; fullscreen; clipboard-write; web-share; geolocation"
+        allowfullscreen loading="eager"></iframe>
+<script>
+  var EXEC = 'https://script.google.com/macros/s/AKfycbwr3kxgUZKxK1DzAoJu9soZ9sNlV7PdpauaAT2mHecZMzOeN2oI7Pi6BGafAoGlBMuq/exec';           /* e.g. https://script.google.com/macros/s/AKfyc.../exec */
+  var qs = window.location.search;            /* forwards ?path=ticket&t=… etc. */
+  var f = document.getElementById('frame');
+  f.src = EXEC + (qs || '?path=home');
+
+  function ready(){ f.classList.add('on'); document.getElementById('splash').classList.add('off'); }
+  f.addEventListener('load', ready);
+  setTimeout(ready, 6000);
+
+  var vv = window.visualViewport;
+  function fit(){ document.body.style.height = (vv ? vv.height : window.innerHeight) + 'px'; }
+  fit();
+  if (vv){ vv.addEventListener('resize', fit); vv.addEventListener('scroll', fit); }
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', function(){ setTimeout(fit, 120); });
+</script>
+</body>
+</html>
+
