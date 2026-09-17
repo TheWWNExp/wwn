@@ -3,8 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<!-- Brand maroon: paints the iOS status bar + Android toolbar so the artwork flows from the top edge -->
-<meta name="theme-color" content="#540A10" id="themeColor">
+<!-- Force the system bar tint on EVERY scheme + cache-busting order -->
+<meta name="theme-color" content="#540A10">
+<meta name="theme-color" content="#540A10" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#540A10" media="(prefers-color-scheme: light)">
 <meta name="description" content="Worship With Nature 2026 · Make room for presence. Free registration · October 10, 2026 · Abuja.">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -26,16 +28,17 @@
 <link rel="preload" as="image" href="https://lh3.googleusercontent.com/d/1pocy4bEO8WMiCZtSjSOAAfe1uGzSx5j4">
 
 <style>
+  /* EVERY layer above the poster wears the artwork's top color — no black anywhere */
   html{margin:0;padding:0;background:#540A10;height:100%}
   body{
-    margin:0;padding:0;background:#0B0B0B;
+    margin:0;padding:0;background:#540A10;
     overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;
     min-height:100vh;min-height:100dvh;position:relative;width:100%;
   }
 
-  /* ---------- iframe ---------- */
   #frame{
-    position:absolute;inset:0;width:100%;height:100%;border:0;background:#0B0B0B;
+    position:absolute;inset:0;width:100%;height:100%;border:0;
+    background:#540A10;
     opacity:0;will-change:opacity;
     transition:opacity .55s ease .05s;
   }
@@ -48,11 +51,11 @@
     #frame.on{transform:scale(1)}
   }
 
-  /* ---------- preloader (maroon top blends the status bar during load) ---------- */
+  /* Preloader: maroon crown blends the bar, body dissolves to black behind the logo */
   #splash{
     position:absolute;inset:0;z-index:2;
     background-color:#0B0B0B;
-    background-image:linear-gradient(180deg,#540A10 0%,rgba(84,10,16,.55) 14%,rgba(11,11,11,0) 40%);
+    background-image:linear-gradient(180deg,#540A10 0%,rgba(84,10,16,.6) 12%,rgba(11,11,11,0) 38%);
     display:flex;align-items:center;justify-content:center;
     opacity:1;transition:opacity .6s ease .05s;
   }
@@ -77,10 +80,8 @@
     display:grid;place-items:center;font:800 .88rem/1 Manrope,sans-serif;
     color:#EE4B1F;letter-spacing:.04em;
   }
-  .accent-line{
-    width:32px;height:1px;background:#EE4B1F;opacity:0;
-    animation:fadeUp .8s cubic-bezier(.22,1,.36,1) .45s forwards;
-  }
+  .accent-line{width:32px;height:1px;background:#EE4B1F;opacity:0;
+    animation:fadeUp .8s cubic-bezier(.22,1,.36,1) .45s forwards}
   .word{
     font:800 .66rem/1 Manrope,-apple-system,sans-serif;letter-spacing:.3em;
     text-transform:uppercase;color:rgba(243,229,211,.55);opacity:0;
@@ -122,14 +123,16 @@
   var splash = document.getElementById('splash');
   f.src = EXEC + (qs || '?path=home');
 
-  /* Live brand-color sync: the app posts its artwork top color; we repaint the system bar */
+  /* Live brand-top sync: repaint system bar + all gap layers to the artwork's exact top color */
+  function paintTop(c){
+    if (!/^#[0-9a-fA-F]{6}$/.test(c)) return;
+    document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) { m.setAttribute('content', c); });
+    document.documentElement.style.background = c;
+    document.body.style.background = c;
+    f.style.background = c;
+  }
   window.addEventListener('message', function (e) {
-    var d = e.data;
-    if (d && typeof d.wwnTheme === 'string' && /^#[0-9a-fA-F]{6}$/.test(d.wwnTheme)) {
-      var m = document.getElementById('themeColor');
-      if (m) m.setAttribute('content', d.wwnTheme);
-      document.documentElement.style.background = d.wwnTheme;
-    }
+    if (e.data && typeof e.data.wwnTheme === 'string') paintTop(e.data.wwnTheme);
   });
 
   var revealed = false;
