@@ -10,7 +10,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Worship With Nature · Make Room For Presence</title>
 
-<!-- Rich link previews (WhatsApp / iMessage / Telegram) -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="Worship With Nature · 2026">
 <meta property="og:description" content="Make room for presence. Free registration · October 10, 2026 · Abuja.">
@@ -19,11 +18,9 @@
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
 
-<!-- Speed: warm the connections before the app needs them -->
 <link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Speed: fetch the logo and mobile hero while the splash is showing -->
 <link rel="preload" as="image" href="https://lh3.googleusercontent.com/d/1fICvZGOq6nPAwsCqma6WjitZGbDgYAAW">
 <link rel="preload" as="image" href="https://lh3.googleusercontent.com/d/1pocy4bEO8WMiCZtSjSOAAfe1uGzSx5j4">
 
@@ -31,83 +28,80 @@
   html,body{margin:0;padding:0;height:100%;background:#0B0B0B;overscroll-behavior:none}
   body{position:fixed;inset:0;width:100%}
 
-  /* ---- Splash / preloader with zoom-out reveal ---- */
-  #splash{
-    position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:18px;background:#0B0B0B;
-    color:#F3E5D3;font-family:Manrope,-apple-system,BlinkMacSystemFont,sans-serif;
-    transform:scale(1.08);
-    transition:opacity .55s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1);
+  /* ---------- iframe: opacity-only on touch devices, depth-zoom on desktop pointers ---------- */
+  #frame{
+    position:absolute;inset:0;width:100%;height:100%;border:0;background:#0B0B0B;
+    opacity:0;will-change:opacity;
+    transition:opacity .55s ease .05s;
   }
-  #splash.off{
-    opacity:0;
-    transform:scale(1);
-    pointer-events:none;
+  #frame.on{opacity:1}
+  @media (min-width:901px) and (pointer:fine){
+    #frame{
+      transform:scale(.96);will-change:opacity,transform;
+      transition:opacity .55s ease .05s, transform .75s cubic-bezier(.16,1,.3,1) .05s;
+    }
+    #frame.on{transform:scale(1)}
   }
 
-  /* Logo image in splash */
+  /* ---------- preloader: veil fades, inner content zooms out ---------- */
+  #splash{
+    position:absolute;inset:0;z-index:2;background:#0B0B0B;
+    display:flex;align-items:center;justify-content:center;
+    opacity:1;transition:opacity .6s ease .05s;
+  }
+  #splash.off{opacity:0;pointer-events:none}
+  .splash-inner{
+    display:flex;flex-direction:column;align-items:center;gap:18px;
+    transform:scale(1);opacity:1;
+    will-change:transform,opacity;
+    transition:transform .7s cubic-bezier(.16,1,.3,1), opacity .45s ease;
+  }
+  #splash.off .splash-inner{transform:scale(.78);opacity:0}
+
   #logoMark{
     height:72px;width:auto;display:block;
     filter:drop-shadow(0 0 22px rgba(238,75,31,.18));
     opacity:0;transform:scale(.92);
-    animation:logoIn .8s cubic-bezier(.22,1,.36,1) forwards, logoBreath 2.6s ease-in-out .8s infinite;
+    animation:logoIn .8s cubic-bezier(.22,1,.36,1) forwards,
+              logoBreath 2.6s ease-in-out .9s infinite;
   }
   .logo-fallback{
     width:72px;height:72px;border-radius:50%;border:1px solid #EE4B1F;
     display:grid;place-items:center;font:800 .88rem/1 Manrope,sans-serif;
     color:#EE4B1F;letter-spacing:.04em;
   }
-
-  .word{
-    font:800 .66rem/1 Manrope,sans-serif;letter-spacing:.3em;
-    text-transform:uppercase;color:rgba(243,229,211,.55);
-    opacity:0;animation:fadeUp .8s cubic-bezier(.22,1,.36,1) .3s forwards;
-  }
-
   .accent-line{
     width:32px;height:1px;background:#EE4B1F;opacity:0;
-    animation:fadeUp .8s cubic-bezier(.22,1,.36,1) .5s forwards;
+    animation:fadeUp .8s cubic-bezier(.22,1,.36,1) .45s forwards;
+  }
+  .word{
+    font:800 .66rem/1 Manrope,-apple-system,sans-serif;letter-spacing:.3em;
+    text-transform:uppercase;color:rgba(243,229,211,.55);opacity:0;
+    animation:fadeUp .8s cubic-bezier(.22,1,.36,1) .28s forwards;
   }
 
-  /* ---- iframe with zoom-in reveal ---- */
-  #frame{
-    position:absolute;inset:0;width:100%;height:100%;border:0;background:#0B0B0B;
-    opacity:0;
-    transform:scale(0.96);
-    transition:opacity .5s ease .1s, transform .6s cubic-bezier(.22,1,.36,1) .1s;
-  }
-  #frame.on{
-    opacity:1;
-    transform:scale(1);
-  }
+  @keyframes logoIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+  @keyframes logoBreath{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.04);opacity:.88}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-  @keyframes logoIn{
-    from{opacity:0;transform:scale(.92)}
-    to{opacity:1;transform:scale(1)}
-  }
-  @keyframes logoBreath{
-    0%,100%{transform:scale(1);opacity:1}
-    50%{transform:scale(1.04);opacity:.88}
-  }
-  @keyframes fadeUp{
-    from{opacity:0;transform:translateY(8px)}
-    to{opacity:1;transform:translateY(0)}
-  }
   @media (prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important}
-    #logoMark,.word,.accent-line,#frame,#splash{opacity:1!important;transform:none!important}
-    #splash{transform:scale(1)!important}
+    #logoMark,.word,.accent-line{opacity:1!important;transform:none!important}
+    #splash,.splash-inner,#frame{opacity:1!important;transform:none!important}
   }
 </style>
 </head>
 <body>
+
 <div id="splash">
-  <img id="logoMark"
-       src="https://lh3.googleusercontent.com/d/1fICvZGOq6nPAwsCqma6WjitZGbDgYAAW"
-       alt="Worship With Nature"
-       onerror="this.outerHTML='<span class=logo-fallback>WWN</span>'">
-  <div class="accent-line"></div>
-  <span class="word">Make room for presence</span>
+  <div class="splash-inner">
+    <img id="logoMark"
+         src="https://lh3.googleusercontent.com/d/1fICvZGOq6nPAwsCqma6WjitZGbDgYAAW"
+         alt="Worship With Nature"
+         onerror="this.outerHTML='<span class=logo-fallback>WWN</span>'">
+    <div class="accent-line"></div>
+    <span class="word">Make room for presence</span>
+  </div>
 </div>
 
 <iframe id="frame" title="Worship With Nature"
@@ -118,24 +112,31 @@
   var EXEC = 'https://script.google.com/macros/s/AKfycbwr3kxgUZKxK1DzAoJu9soZ9sNlV7PdpauaAT2mHecZMzOeN2oI7Pi6BGafAoGlBMuq/exec';
   var qs = window.location.search;
   var f = document.getElementById('frame');
+  var splash = document.getElementById('splash');
   f.src = EXEC + (qs || '?path=home');
 
-  function ready(){
-    f.classList.add('on');
-    document.getElementById('splash').classList.add('off');
+  /* Reveal: wait for load + paint grace, gate on double-rAF so transitions always run */
+  var revealed = false;
+  function reveal(){
+    if (revealed) return;
+    revealed = true;
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        f.classList.add('on');
+        splash.classList.add('off');
+        /* drop the veil layer once dissolved (frees a compositor layer on phones) */
+        setTimeout(function(){ splash.style.display = 'none'; }, 900);
+      });
+    });
   }
-  f.addEventListener('load', ready);
-  setTimeout(ready, 6000);
+  f.addEventListener('load', function(){ setTimeout(reveal, 550); });
+  setTimeout(reveal, 6500); /* safety net on very slow networks */
 
+  /* Lock shell viewport to the true visible height */
   var vv = window.visualViewport;
-  function fit(){
-    document.body.style.height = (vv ? vv.height : window.innerHeight) + 'px';
-  }
+  function fit(){ document.body.style.height = (vv ? vv.height : window.innerHeight) + 'px'; }
   fit();
-  if (vv){
-    vv.addEventListener('resize', fit);
-    vv.addEventListener('scroll', fit);
-  }
+  if (vv){ vv.addEventListener('resize', fit); vv.addEventListener('scroll', fit); }
   window.addEventListener('resize', fit);
   window.addEventListener('orientationchange', function(){ setTimeout(fit, 120); });
 </script>
