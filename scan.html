@@ -20,41 +20,47 @@
   html,body{margin:0;background:var(--ink);color:var(--cream);font-family:var(--fb);min-height:100dvh}
   ::selection{background:var(--orange);color:#fff}
 
-  .wrap{max-width:560px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top)) 18px 40px;
-    display:flex;flex-direction:column;gap:18px;min-height:100dvh}
+  .wrap{max-width:560px;margin:0 auto;padding:calc(20px + env(safe-area-inset-top)) 18px calc(36px + env(safe-area-inset-bottom));
+    display:flex;flex-direction:column;gap:16px;min-height:100dvh}
 
-  /* ---- Login gate ---- */
-  .login{text-align:center;padding:40px 0}
-  .login-logo{width:80px;height:80px;border-radius:50%;background:var(--cream);
-    display:grid;place-items:center;margin:0 auto 24px;
-    font:800 1.2rem/1 var(--fb);color:var(--ink);letter-spacing:.04em}
-  .login-logo img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-  .login h1{margin:0 0 8px;font:800 clamp(2rem,8vw,2.8rem)/1.05 var(--fb);
-    letter-spacing:-.02em;color:#fff}
-  .login p{margin:0 auto 28px;max-width:32ch;font:400 .95rem/1.6 var(--fb);color:var(--dim)}
-  .login-field{max-width:320px;margin:0 auto 16px}
+  /* ---- Login ---- */
+  .login{text-align:center;padding:40px 0;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center}
+  .login-logo{height:72px;width:auto;max-width:240px;object-fit:contain;display:block;margin:0 auto 28px;
+    filter:drop-shadow(0 6px 24px rgba(238,75,31,.15))}
+  .login-fallback{height:72px;font:800 2.4rem/72px var(--fb);letter-spacing:-.02em;color:var(--cream);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 28px}
+  .login h1{margin:0 0 8px;font:800 clamp(2rem,8vw,2.8rem)/1.05 var(--fb);letter-spacing:-.02em;color:#fff}
+  .login p{margin:0 auto 32px;max-width:32ch;font:400 .95rem/1.6 var(--fb);color:var(--dim)}
+  .login-field{max-width:320px;margin:0 auto 14px;width:100%}
   .login-field input{width:100%;padding:16px 18px;border:1px solid #2A2A2A;border-radius:12px;
-    background:#111;color:#fff;font:600 1rem/1 var(--fb);letter-spacing:.08em;text-align:center}
+    background:#111;color:#fff;font:600 1rem/1 var(--fb);letter-spacing:.1em;text-align:center}
   .login-field input:focus{outline:none;border-color:var(--orange)}
-  .login-field input::placeholder{color:rgba(243,229,211,.4)}
+  .login-field input::placeholder{color:rgba(243,229,211,.35);letter-spacing:.04em}
   .login-btn{width:100%;max-width:320px;padding:16px;border:0;border-radius:12px;
-    background:var(--orange);color:#fff;font:800 .9rem/1 var(--fb);letter-spacing:.04em;
-    cursor:pointer;touch-action:manipulation;transition:background .2s}
+    background:var(--orange);color:#fff;font:800 .9rem/1 var(--fb);letter-spacing:.06em;
+    cursor:pointer;touch-action:manipulation;transition:background .2s,transform .15s}
   .login-btn:hover{background:var(--orange-light)}
+  .login-btn:active{transform:scale(.98)}
   .login-btn:disabled{opacity:.5;cursor:default}
-  .login-err{color:var(--orange);font-size:.85rem;margin-top:12px;min-height:20px}
+  .login-err{color:var(--orange);font-size:.85rem;margin-top:14px;min-height:20px;font-weight:600}
 
-  /* ---- Scanner ---- */
+  /* ---- Scanner header ---- */
+  .scan-header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:8px}
+  .scan-logo{height:36px;width:auto;max-width:140px;object-fit:contain;display:block;
+    filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
+  .scan-logo-fallback{height:36px;font:800 1.1rem/36px var(--fb);letter-spacing:-.01em;color:var(--cream)}
+  .logout-btn{background:transparent;border:1px solid rgba(243,229,211,.2);color:var(--dim);
+    padding:8px 14px;border-radius:999px;font:700 .7rem/1 var(--fb);letter-spacing:.14em;
+    text-transform:uppercase;cursor:pointer;touch-action:manipulation;transition:all .2s}
+  .logout-btn:hover{border-color:var(--orange);color:var(--orange)}
+
   .eyebrow{font:700 .7rem/1 var(--fb);letter-spacing:.34em;text-transform:uppercase;
-    color:var(--orange);margin:0;text-align:center}
-  .logo-small{width:48px;height:48px;border-radius:50%;background:var(--cream);
-    display:grid;place-items:center;margin:0 auto 8px;
-    font:800 .8rem/1 var(--fb);color:var(--ink);letter-spacing:.04em}
-  .logo-small img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-  h1{margin:0;text-align:center;font:800 clamp(2.2rem,9vw,3.2rem)/1.02 var(--fb);
+    color:var(--orange);margin:8px 0 0;text-align:center}
+  h1.title{margin:0 0 16px;text-align:center;font:800 clamp(2rem,8vw,2.8rem)/1.05 var(--fb);
     letter-spacing:-.02em;color:#fff}
-  h1 em{font-style:normal;color:var(--orange)}
+  h1.title em{font-style:normal;color:var(--orange)}
 
+  /* ---- Camera ---- */
   .cam{background:#111;border:1px solid #1F1F1F;border-radius:18px;overflow:hidden;position:relative}
   #reader{width:100%;background:#000;min-height:300px}
   #reader video{object-fit:cover!important}
@@ -62,74 +68,109 @@
   #reader__dashboard,#reader__dashboard_section{padding:0!important}
   #reader__status_span,#reader__header_message{display:none!important}
   .frame{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-    width:min(70%,300px);aspect-ratio:1;pointer-events:none;z-index:3}
-  .frame i{position:absolute;width:26px;height:26px;border:3px solid var(--orange)}
-  .frame i.tl{top:0;left:0;border-right:0;border-bottom:0;border-top-left-radius:12px}
-  .frame i.tr{top:0;right:0;border-left:0;border-bottom:0;border-top-right-radius:12px}
-  .frame i.bl{bottom:0;left:0;border-right:0;border-top:0;border-bottom-left-radius:12px}
-  .frame i.br{bottom:0;right:0;border-left:0;border-top:0;border-bottom-right-radius:12px}
-  .hint{padding:14px 18px;margin:0;text-align:center;font:400 .88rem/1.5 var(--fb);color:var(--dim)}
-  .actions{display:flex;gap:10px;padding:0 18px 18px}
-  .btn{flex:1;border:0;border-radius:12px;padding:16px;font:800 .9rem/1 var(--fb);
+    width:min(70%,280px);aspect-ratio:1;pointer-events:none;z-index:3}
+  .frame i{position:absolute;width:24px;height:24px;border:3px solid var(--orange)}
+  .frame i.tl{top:0;left:0;border-right:0;border-bottom:0;border-top-left-radius:10px}
+  .frame i.tr{top:0;right:0;border-left:0;border-bottom:0;border-top-right-radius:10px}
+  .frame i.bl{bottom:0;left:0;border-right:0;border-top:0;border-bottom-left-radius:10px}
+  .frame i.br{bottom:0;right:0;border-left:0;border-top:0;border-bottom-right-radius:10px}
+  .hint{padding:12px 18px;margin:0;text-align:center;font:400 .86rem/1.5 var(--fb);color:var(--dim)}
+  .actions{display:flex;gap:10px;padding:0 18px 16px}
+  .btn{flex:1;border:0;border-radius:12px;padding:14px;font:800 .85rem/1 var(--fb);
     cursor:pointer;touch-action:manipulation;transition:transform .15s}
   .btn:active{transform:scale(.97)}
   .primary{background:var(--orange);color:#fff}
   .ghost{background:#1A1A1A;color:var(--cream);border:1px solid #262626}
 
   /* ---- Result cards ---- */
-  .result{border-radius:18px;padding:28px 22px;text-align:center;
-    animation:resultIn .4s cubic-bezier(.22,1,.36,1) both}
-  @keyframes resultIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .result{border-radius:18px;padding:24px 20px;text-align:center;
+    animation:resultIn .35s cubic-bezier(.22,1,.36,1) both}
+  @keyframes resultIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   .result.ok{background:linear-gradient(180deg,#0F2A1E 0%,#0B0B0B 100%);border:1px solid rgba(31,122,77,.4)}
   .result.warn{background:linear-gradient(180deg,#2A1F0A 0%,#0B0B0B 100%);border:1px solid rgba(184,134,11,.4)}
   .result.err{background:linear-gradient(180deg,#2A0F0F 0%,#0B0B0B 100%);border:1px solid rgba(176,58,46,.4)}
-  .result .big-ico{width:74px;height:74px;border-radius:50%;margin:0 auto 18px;
-    display:grid;place-items:center;font-size:2rem;font-weight:800}
+  .result .big-ico{width:64px;height:64px;border-radius:50%;margin:0 auto 14px;
+    display:grid;place-items:center;font-size:1.8rem;font-weight:800}
   .result.ok .big-ico{background:rgba(31,122,77,.2);color:#4FD38F}
   .result.warn .big-ico{background:rgba(184,134,11,.2);color:#E8C46A}
   .result.err .big-ico{background:rgba(176,58,46,.2);color:#F28B7E}
-  .result h2{margin:0 0 6px;font:800 clamp(1.6rem,5.5vw,2.1rem)/1.1 var(--fb);
+  .result h2{margin:0 0 4px;font:800 clamp(1.4rem,5vw,1.8rem)/1.1 var(--fb);
     letter-spacing:-.01em;color:#fff;text-transform:uppercase}
-  .result .name{font:800 1.4rem/1.2 var(--fb);color:#fff;margin:14px 0 4px}
-  .result .sub{font:400 .9rem/1.5 var(--fb);color:var(--dim);margin:0 0 14px}
-  .result .meta{display:flex;flex-direction:column;gap:6px;margin-top:16px;
-    padding-top:16px;border-top:1px dashed rgba(243,229,211,.15)}
-  .result .meta .row{display:flex;justify-content:space-between;gap:10px;font:500 .85rem/1.4 var(--fb)}
-  .result .meta .k{color:var(--dim);letter-spacing:.14em;text-transform:uppercase;font-size:.68rem;font-weight:700}
-  .result .meta .v{color:#fff;font-weight:800;letter-spacing:.04em;text-align:right}
-  .result .btn{margin-top:20px}
+  .result .category{display:inline-block;padding:4px 10px;border-radius:999px;
+    background:rgba(238,75,31,.15);color:var(--orange);
+    font:800 .62rem/1 var(--fb);letter-spacing:.2em;text-transform:uppercase;margin:8px 0 12px}
+  .result .sub{font:400 .88rem/1.5 var(--fb);color:var(--dim);margin:0 0 14px}
 
-  .foot{margin-top:auto;padding-top:20px;text-align:center;
+  /* Party roster */
+  .party{background:rgba(243,229,211,.04);border:1px solid rgba(243,229,211,.1);
+    border-radius:12px;padding:14px 16px;margin:12px 0;text-align:left}
+  .party-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;
+    padding-bottom:8px;border-bottom:1px dashed rgba(243,229,211,.12)}
+  .party-head .k{font:700 .62rem/1 var(--fb);letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+  .party-head .n{font:800 .95rem/1 var(--fb);color:#fff}
+  .party-member{display:flex;justify-content:space-between;gap:10px;padding:6px 0;
+    font:500 .88rem/1.4 var(--fb);align-items:baseline}
+  .party-member + .party-member{border-top:1px solid rgba(243,229,211,.06)}
+  .party-member .name{color:#fff;font-weight:700;flex:1;min-width:0}
+  .party-member .name .age{color:var(--dim);font-weight:500;font-size:.78rem;margin-left:4px}
+  .party-member .role{font:700 .6rem/1 var(--fb);letter-spacing:.18em;text-transform:uppercase;
+    color:var(--dim);flex:none}
+  .party-member .role.primary{color:var(--orange-light)}
+  .party-member .role.partner{color:#7EC8E3}
+  .party-member .role.child{color:#E8C46A}
+  .party-member .seat{font:700 .78rem/1 var(--fb);color:#fff;font-variant-numeric:tabular-nums;
+    margin-left:8px;flex:none}
+
+  /* Single person display (when not family) */
+  .person-name{font:800 1.3rem/1.2 var(--fb);color:#fff;margin:10px 0 4px}
+
+  .result .meta{display:flex;flex-direction:column;gap:5px;margin-top:12px;
+    padding-top:12px;border-top:1px dashed rgba(243,229,211,.12)}
+  .result .meta .row{display:flex;justify-content:space-between;gap:10px;font:500 .82rem/1.4 var(--fb)}
+  .result .meta .k{color:var(--dim);letter-spacing:.14em;text-transform:uppercase;font-size:.64rem;font-weight:700}
+  .result .meta .v{color:#fff;font-weight:800;letter-spacing:.04em;text-align:right}
+
+  .auto-note{margin-top:14px;font:500 .75rem/1.4 var(--fb);color:var(--dim);letter-spacing:.04em}
+  .auto-note .count{color:var(--orange);font-weight:700;font-variant-numeric:tabular-nums}
+
+  .progress-bar{height:3px;background:rgba(243,229,211,.1);border-radius:2px;
+    overflow:hidden;margin-top:12px}
+  .progress-bar .fill{height:100%;background:var(--orange);width:0;
+    transition:width linear}
+
+  .foot{margin-top:auto;padding-top:16px;text-align:center;
     font:600 .7rem/1.6 var(--fb);letter-spacing:.26em;text-transform:uppercase;color:var(--dim)}
   .foot strong{color:var(--orange-light)}
 
-  @media (prefers-reduced-motion:reduce){
-    .result{animation:none!important}
-  }
+  @media (prefers-reduced-motion:reduce){.result{animation:none!important}}
 </style>
 </head>
 <body>
 <main class="wrap">
 
-  <!-- LOGIN GATE -->
+  <!-- ========== LOGIN ========== -->
   <div class="login" id="loginScreen">
-    <div class="login-logo" id="loginLogo">WWN</div>
+    <div id="loginLogoWrap"></div>
     <h1>Welcome,<br>staff.</h1>
     <p>Enter your staff key to access the event-day scanner.</p>
     <div class="login-field">
-      <input type="password" id="keyInput" placeholder="Staff key" autocomplete="off">
+      <input type="password" id="keyInput" placeholder="Staff key" autocomplete="off" spellcheck="false">
     </div>
     <button class="login-btn" id="loginBtn">Unlock scanner</button>
     <div class="login-err" id="loginErr"></div>
   </div>
 
-  <!-- SCANNER -->
+  <!-- ========== SCANNER ========== -->
   <div id="scannerScreen" hidden>
-    <div class="logo-small" id="scanLogo">WWN</div>
-    <p class="eyebrow">WWN · Event Day</p>
-    <h1>Point.<br><em>Scan.</em><br>Welcome.</h1>
+    <div class="scan-header">
+      <div id="scanLogoWrap"></div>
+      <button class="logout-btn" id="logoutBtn">Log out</button>
+    </div>
 
-    <div class="cam">
+    <p class="eyebrow">WWN · Event Day</p>
+    <h1 class="title">Point.<br><em>Scan.</em><br>Welcome.</h1>
+
+    <div class="cam" id="camCard">
       <div id="reader"></div>
       <div class="frame" id="frame" hidden><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
       <p class="hint" id="hint">Starting camera…</p>
@@ -150,15 +191,19 @@
   'use strict';
 
   var EXEC = 'https://script.google.com/macros/s/AKfycbyiF5Umx_LlTxCU2FJy55r91ykLAh-FWPRWAxVacgY9BLS4dY1gx8SXmchhkNBdVT5_/exec';
-  var SESSION_KEY = 'wwn-staff-key';
+
+  /* In-memory only — never persisted. Reload/close = logged out. */
+  var staffKey = '';
+  var config = {};
 
   var loginScreen = document.getElementById('loginScreen');
   var scannerScreen = document.getElementById('scannerScreen');
   var keyInput = document.getElementById('keyInput');
   var loginBtn = document.getElementById('loginBtn');
   var loginErr = document.getElementById('loginErr');
-  var loginLogo = document.getElementById('loginLogo');
-  var scanLogo = document.getElementById('scanLogo');
+  var loginLogoWrap = document.getElementById('loginLogoWrap');
+  var scanLogoWrap = document.getElementById('scanLogoWrap');
+  var logoutBtn = document.getElementById('logoutBtn');
 
   var hint = document.getElementById('hint');
   var frame = document.getElementById('frame');
@@ -166,37 +211,23 @@
   var stopB = document.getElementById('stop');
   var resultArea = document.getElementById('resultArea');
 
-  var qr = null, on = false, last = 0, staffKey = '';
+  var qr = null, on = false, last = 0, autoTimer = null, autoProgressTimer = null;
 
-  /* ---- Session management ---- */
-  function getStoredKey(){
-    try { return sessionStorage.getItem(SESSION_KEY) || ''; } catch (e) { return ''; }
+  /* ---- Default fallback logos ---- */
+  function renderFallbacks(){
+    loginLogoWrap.innerHTML = '<div class="login-fallback">WWN</div>';
+    scanLogoWrap.innerHTML = '<div class="scan-logo-fallback">WWN</div>';
   }
-  function storeKey(k){
-    try { sessionStorage.setItem(SESSION_KEY, k); } catch (e) {}
-  }
-  function clearKey(){
-    try { sessionStorage.removeItem(SESSION_KEY); } catch (e) {}
-  }
+  renderFallbacks();
 
-  /* ---- Boot ---- */
-  (function boot(){
-    var stored = getStoredKey();
-    if (stored) {
-      staffKey = stored;
-      loadConfigAndStart();
-    } else {
-      loginScreen.hidden = false;
-      scannerScreen.hidden = true;
-      keyInput.focus();
-    }
-  })();
+  /* ---- Boot (no persistence — pure in-memory) ---- */
+  loginScreen.hidden = false;
+  scannerScreen.hidden = true;
+  keyInput.focus();
 
   /* ---- Login ---- */
   loginBtn.addEventListener('click', attemptLogin);
-  keyInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') attemptLogin();
-  });
+  keyInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') attemptLogin(); });
 
   function attemptLogin(){
     var k = keyInput.value.trim();
@@ -213,20 +244,20 @@
     .then(function (res) {
       if (res && res.valid) {
         staffKey = k;
-        storeKey(k);
         loadConfigAndStart();
       } else {
         loginErr.textContent = 'Invalid staff key. Please try again.';
         loginBtn.disabled = false;
+        keyInput.select();
       }
     })
-    .catch(function (err) {
+    .catch(function () {
       loginErr.textContent = 'Connection issue. Please try again.';
       loginBtn.disabled = false;
     });
   }
 
-  /* ---- Load config + start scanner ---- */
+  /* ---- Load config (logo URL) and start scanner ---- */
   function loadConfigAndStart(){
     fetch(EXEC, {
       method: 'POST',
@@ -235,25 +266,76 @@
     })
     .then(function (r) { return r.json(); })
     .then(function (cfg) {
-      if (cfg && cfg.logoUrl) {
-        var img = new Image();
-        img.onload = function () {
-          loginLogo.innerHTML = '<img src="' + cfg.logoUrl + '" alt="WWN">';
-          scanLogo.innerHTML = '<img src="' + cfg.logoUrl + '" alt="WWN">';
-        };
-        img.src = cfg.logoUrl;
-      }
-      showScanner();
+      config = cfg || {};
+      if (config && config.logoUrl) applyLogos(config.logoUrl);
+      enterScanner();
     })
     .catch(function () {
-      showScanner();
+      enterScanner();
     });
   }
 
-  function showScanner(){
+  function applyLogos(url){
+    var loginImg = new Image();
+    loginImg.onload = function () {
+      loginLogoWrap.innerHTML = '';
+      loginImg.className = 'login-logo';
+      loginImg.alt = 'Worship With Nature';
+      loginLogoWrap.appendChild(loginImg);
+    };
+    loginImg.onerror = renderFallbacks;
+    loginImg.src = url;
+
+    var scanImg = new Image();
+    scanImg.onload = function () {
+      scanLogoWrap.innerHTML = '';
+      scanImg.className = 'scan-logo';
+      scanImg.alt = 'WWN';
+      scanLogoWrap.appendChild(scanImg);
+    };
+    scanImg.onerror = function () {
+      scanLogoWrap.innerHTML = '<div class="scan-logo-fallback">WWN</div>';
+    };
+    scanImg.src = url;
+  }
+
+  function enterScanner(){
     loginScreen.hidden = true;
     scannerScreen.hidden = false;
-    setTimeout(start, 250);
+    setTimeout(start, 300);
+  }
+
+  /* ---- Logout ---- */
+  logoutBtn.addEventListener('click', function () {
+    if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+    if (autoProgressTimer) { clearInterval(autoProgressTimer); autoProgressTimer = null; }
+    if (qr && on) {
+      qr.stop().then(function () {
+        on = false;
+        staffKey = '';
+        config = {};
+        resetToLogin();
+      }).catch(function () {
+        staffKey = '';
+        config = {};
+        resetToLogin();
+      });
+    } else {
+      staffKey = '';
+      config = {};
+      resetToLogin();
+    }
+  });
+
+  function resetToLogin(){
+    scannerScreen.hidden = true;
+    loginScreen.hidden = false;
+    keyInput.value = '';
+    loginErr.textContent = '';
+    loginBtn.disabled = false;
+    resultArea.innerHTML = '';
+    renderFallbacks();
+    keyInput.focus();
   }
 
   /* ---- Camera ---- */
@@ -324,65 +406,116 @@
     })
     .then(function (r) { return r.json(); })
     .then(function (res) {
-      if (!res || !res.ok) {
-        renderError(res);
-      } else {
-        renderSuccess(res);
+      if (res && res.kind === 'forbidden') {
+        staffKey = '';
+        resetToLogin();
+        return;
       }
+      if (!res || !res.ok) renderError(res);
+      else renderSuccess(res);
     })
-    .catch(function (err) {
-      resultArea.innerHTML = '<div class="result err"><div class="big-ico">!</div>' +
-        '<h2>Connection issue</h2><p class="sub">Please try again.</p>' +
-        '<button class="btn primary" id="retryBtn" type="button">Next attendee</button></div>';
-      wireNext();
+    .catch(function () {
+      renderGenericError();
     });
   }
 
+  /* ---- Rendering ---- */
   function renderSuccess(r){
-    resultArea.innerHTML = '<div class="result ok"><div class="big-ico">✓</div><h2>Checked in</h2>' +
-      '<div class="name">' + esc(r.name || 'Attendee') + '</div>' +
-      '<p class="sub">Welcome to Worship With Nature.</p>' +
-      '<div class="meta">' +
-        metaRow('Ticket', r.ticketId || '') + metaRow('Seat', r.seat || '') +
-        metaRow('Pass', r.type || '') + (r.age != null ? metaRow('Age', r.age) : '') +
-        metaRow('Time', r.checkedInAt || nowTime()) +
-      '</div><button class="btn primary" id="retryBtn" type="button">Next attendee</button></div>';
-    wireNext();
+    var html = '<div class="result ok"><div class="big-ico">✓</div><h2>Checked in</h2>';
+
+    if (r.category && r.category !== 'SINGLE' && r.party && r.party.length) {
+      html += '<div class="category">' + esc(labelForCategory(r.category)) + '</div>';
+      html += renderParty(r.party);
+    } else {
+      html += '<div class="person-name">' + esc(r.name || 'Attendee') + '</div>';
+    }
+
+    html += '<p class="sub">Welcome to Worship With Nature.</p>';
+    html += '<div class="meta">';
+    html += metaRow('Ticket', r.ticketId || '');
+    if (r.category !== 'SINGLE' && r.party && r.party.length > 1) {
+      html += metaRow('Seats', seatsSummary(r.party));
+    } else {
+      html += metaRow('Seat', r.seat || '');
+    }
+    html += metaRow('Pass', r.type || '');
+    html += metaRow('Time', r.checkedInAt || nowTime());
+    html += '</div>';
+    html += '<p class="auto-note">Camera reactivates in <span class="count" id="countNum">3</span>s</p>';
+    html += '<div class="progress-bar"><div class="fill" id="progressFill"></div></div>';
+    html += '</div>';
+
+    resultArea.innerHTML = html;
     if (navigator.vibrate) navigator.vibrate(40);
+    scheduleAutoResume(3000);
   }
 
   function renderError(r){
     var kind = (r && r.kind) || 'not_found';
+    var html = '';
+    var delay = 3500;
+
     if (kind === 'already') {
-      resultArea.innerHTML = '<div class="result warn"><div class="big-ico">✓</div><h2>Already checked in</h2>' +
-        '<div class="name">' + esc(r.name || 'Attendee') + '</div>' +
-        '<p class="sub">This pass was already welcomed in.</p>' +
-        '<div class="meta">' + metaRow('Ticket', r.ticketId || '') + metaRow('Seat', r.seat || '') +
-        metaRow('Time', r.checkedInAt || '') +
-        '</div><button class="btn primary" id="retryBtn" type="button">Next attendee</button></div>';
+      html = '<div class="result warn"><div class="big-ico">✓</div><h2>Already checked in</h2>';
+      if (r.category && r.category !== 'SINGLE' && r.party && r.party.length) {
+        html += '<div class="category">' + esc(labelForCategory(r.category)) + '</div>';
+        html += renderParty(r.party);
+      } else {
+        html += '<div class="person-name">' + esc(r.name || 'Attendee') + '</div>';
+      }
+      html += '<p class="sub">This pass was already welcomed in.</p>';
+      html += '<div class="meta">' + metaRow('Ticket', r.ticketId || '') + metaRow('Time', r.checkedInAt || '') + '</div>';
     } else if (kind === 'cancelled') {
-      resultArea.innerHTML = '<div class="result err"><div class="big-ico">✕</div><h2>Cancelled ticket</h2>' +
+      html = '<div class="result err"><div class="big-ico">✕</div><h2>Cancelled ticket</h2>' +
         '<p class="sub">This pass has been cancelled and cannot be used.</p>' +
-        '<div class="meta">' + metaRow('Ticket', r.ticketId || '') +
-        '</div><button class="btn primary" id="retryBtn" type="button">Next attendee</button></div>';
-    } else if (kind === 'forbidden') {
-      clearKey();
-      location.reload();
+        '<div class="meta">' + metaRow('Ticket', r.ticketId || '') + '</div>';
+      delay = 4000;
     } else {
-      resultArea.innerHTML = '<div class="result err"><div class="big-ico">?</div><h2>Ticket not found</h2>' +
-        '<p class="sub">Please verify the pass and try again.</p>' +
-        '<button class="btn primary" id="retryBtn" type="button">Next attendee</button></div>';
+      html = '<div class="result err"><div class="big-ico">?</div><h2>Ticket not found</h2>' +
+        '<p class="sub">Please verify the pass and try again.</p>';
+      delay = 3000;
     }
-    wireNext();
+    html += '<p class="auto-note">Camera reactivates in <span class="count" id="countNum">3</span>s</p>';
+    html += '<div class="progress-bar"><div class="fill" id="progressFill"></div></div>';
+    html += '</div>';
+    resultArea.innerHTML = html;
+    scheduleAutoResume(delay);
   }
 
-  function wireNext(){
-    var rb = document.getElementById('retryBtn');
-    if (!rb) return;
-    rb.addEventListener('click', function () {
-      resultArea.innerHTML = '';
-      setTimeout(start, 150);
+  function renderGenericError(){
+    resultArea.innerHTML = '<div class="result err"><div class="big-ico">!</div>' +
+      '<h2>Connection issue</h2><p class="sub">Please try again.</p>' +
+      '<p class="auto-note">Camera reactivates in <span class="count" id="countNum">3</span>s</p>' +
+      '<div class="progress-bar"><div class="fill" id="progressFill"></div></div></div>';
+    scheduleAutoResume(3000);
+  }
+
+  function renderParty(party){
+    var html = '<div class="party">';
+    html += '<div class="party-head"><span class="k">Party</span><span class="n">' + party.length + ' ' + (party.length === 1 ? 'person' : 'people') + '</span></div>';
+    party.forEach(function (m) {
+      var roleClass = (m.role || '').toLowerCase();
+      var roleLabel = m.role || '';
+      var ageBit = (m.age != null && roleClass === 'child') ? '<span class="age">(age ' + m.age + ')</span>' : '';
+      html += '<div class="party-member">' +
+        '<span class="name">' + esc(m.name || '') + ageBit + '</span>' +
+        '<span class="role ' + roleClass + '">' + esc(roleLabel) + '</span>' +
+        '<span class="seat">' + esc(m.seat || '') + '</span>' +
+        '</div>';
     });
+    html += '</div>';
+    return html;
+  }
+
+  function seatsSummary(party){
+    return party.map(function (m) { return m.seat || ''; }).filter(Boolean).join(' · ');
+  }
+
+  function labelForCategory(c){
+    c = String(c || '').toUpperCase();
+    if (c === 'FAMILY') return 'Family booking';
+    if (c === 'PARTNER') return 'Partner booking';
+    return 'Single booking';
   }
 
   function metaRow(k, v){
@@ -394,6 +527,44 @@
       return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
     });
   }
+
+  /* ---- Auto-resume camera after result ---- */
+  function scheduleAutoResume(ms){
+    if (autoTimer) clearTimeout(autoTimer);
+    if (autoProgressTimer) clearInterval(autoProgressTimer);
+
+    var fill = document.getElementById('progressFill');
+    var countEl = document.getElementById('countNum');
+    if (fill) {
+      fill.style.transition = 'none';
+      fill.style.width = '0%';
+      void fill.offsetWidth;
+      fill.style.transition = 'width ' + ms + 'ms linear';
+      fill.style.width = '100%';
+    }
+    var seconds = Math.ceil(ms / 1000);
+    var tick = 1000;
+    var remaining = seconds;
+    if (countEl) countEl.textContent = remaining;
+    autoProgressTimer = setInterval(function () {
+      remaining--;
+      if (countEl) countEl.textContent = Math.max(0, remaining);
+      if (remaining <= 0) clearInterval(autoProgressTimer);
+    }, tick);
+
+    autoTimer = setTimeout(function () {
+      autoTimer = null;
+      resultArea.innerHTML = '';
+      on = false;
+      start();
+    }, ms);
+  }
+
+  /* ---- Safety: unload clears everything ---- */
+  window.addEventListener('beforeunload', function () {
+    staffKey = '';
+    config = {};
+  });
 })();
 </script>
 </body>
