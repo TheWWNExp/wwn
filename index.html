@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<!-- System top-bar tint = artwork crown (blends the top edge) -->
 <meta name="theme-color" content="#540A10">
 <meta name="theme-color" content="#540A10" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#540A10" media="(prefers-color-scheme: light)">
@@ -30,7 +29,7 @@
 <style>
   :root{
     --brand-top:#540A10;  /* artwork crown / system bar tint */
-    --ink-bg:#0B0B0B;     /* page + gap color (matches footer) */
+    --ink-bg:#0B0B0B;     /* page + bottom gap color */
   }
   html{margin:0;padding:0;background:var(--ink-bg);height:100%}
   body{
@@ -39,7 +38,22 @@
     min-height:100vh;min-height:100dvh;position:relative;width:100%;
   }
 
-  /* ---------- iframe: cinematic settle (large -> crisp) ---------- */
+  /* ---------- FORCED TOP CROWN (mobile only) ----------
+     Paints #540A10 over the status-bar strip / any top gap and
+     fades it into the artwork below — seamless in every geometry. */
+  #topblend{
+    display:none;
+    position:fixed;top:0;left:0;right:0;z-index:5;pointer-events:none;
+    height:calc(env(safe-area-inset-top, 0px) + 52px);
+    background:linear-gradient(180deg,
+      #540A10 0%,
+      rgba(84,10,16,.88) 34%,
+      rgba(84,10,16,.42) 66%,
+      rgba(84,10,16,0) 100%);
+  }
+  @media (max-width:900px){ #topblend{display:block} }
+
+  /* ---------- iframe: cinematic settle ---------- */
   #frame{
     position:absolute;inset:0;width:100%;height:100%;border:0;
     background:var(--ink-bg);
@@ -53,7 +67,7 @@
   }
   #frame.on{opacity:1;transform:scale(1)}
 
-  /* ---------- preloader: crown blends top, logo dissolves away ---------- */
+  /* ---------- preloader ---------- */
   #splash{
     position:absolute;inset:0;z-index:2;
     background-color:var(--ink-bg);
@@ -125,6 +139,8 @@
         allow="camera; microphone; fullscreen; clipboard-write; web-share; geolocation"
         allowfullscreen loading="eager"></iframe>
 
+<div id="topblend" aria-hidden="true"></div>
+
 <script>
   var EXEC = 'https://script.google.com/macros/s/AKfycbwr3kxgUZKxK1DzAoJu9soZ9sNlV7PdpauaAT2mHecZMzOeN2oI7Pi6BGafAoGlBMuq/exec';
   var qs = window.location.search;
@@ -132,7 +148,6 @@
   var splash = document.getElementById('splash');
   f.src = EXEC + (qs || '?path=home');
 
-  /* Once the cinematic settle finishes, drop the transform so the iframe is pixel-crisp */
   f.addEventListener('transitionend', function (e) {
     if (e.propertyName === 'transform') {
       f.style.transform = 'none';
@@ -140,12 +155,13 @@
     }
   });
 
-  /* Live brand-top sync from the app (repaints system bar + splash crown only) */
   window.addEventListener('message', function (e) {
     var c = e.data && e.data.wwnTheme;
     if (typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c)) {
       document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) { m.setAttribute('content', c); });
       document.documentElement.style.setProperty('--brand-top', c);
+      document.getElementById('topblend').style.background =
+        'linear-gradient(180deg,' + c + ' 0%, rgba(84,10,16,.88) 34%, rgba(84,10,16,.42) 66%, rgba(84,10,16,0) 100%)';
     }
   });
 
