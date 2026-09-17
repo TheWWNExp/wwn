@@ -4,26 +4,65 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0B0B0B">
-<title>WWN · Camera</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>WWN · Event Day</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
-  :root{--ink:#0B0B0B;--cream:#F3E5D3;--dim:rgba(243,229,211,.65);--orange:#EE4B1F;--fb:'Manrope',-apple-system,sans-serif}
-  *{box-sizing:border-box}[hidden]{display:none!important}
+  :root{
+    --ink:#0B0B0B;--cream:#F3E5D3;--dim:rgba(243,229,211,.65);
+    --orange:#EE4B1F;--orange-light:#F97B4F;
+    --fb:'Manrope',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
   html,body{margin:0;background:var(--ink);color:var(--cream);font-family:var(--fb);min-height:100dvh}
+  ::selection{background:var(--orange);color:#fff}
+
   .wrap{max-width:560px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top)) 18px 40px;
     display:flex;flex-direction:column;gap:18px;min-height:100dvh}
-  .eyebrow{font:700 .7rem/1 var(--fb);letter-spacing:.34em;text-transform:uppercase;color:var(--orange);margin:0;text-align:center}
-  h1{margin:0;text-align:center;font:800 clamp(2.2rem,9vw,3.2rem)/1.02 var(--fb);letter-spacing:-.02em;color:#fff}
+
+  /* ---- Login gate ---- */
+  .login{text-align:center;padding:40px 0}
+  .login-logo{width:80px;height:80px;border-radius:50%;background:var(--cream);
+    display:grid;place-items:center;margin:0 auto 24px;
+    font:800 1.2rem/1 var(--fb);color:var(--ink);letter-spacing:.04em}
+  .login-logo img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+  .login h1{margin:0 0 8px;font:800 clamp(2rem,8vw,2.8rem)/1.05 var(--fb);
+    letter-spacing:-.02em;color:#fff}
+  .login p{margin:0 auto 28px;max-width:32ch;font:400 .95rem/1.6 var(--fb);color:var(--dim)}
+  .login-field{max-width:320px;margin:0 auto 16px}
+  .login-field input{width:100%;padding:16px 18px;border:1px solid #2A2A2A;border-radius:12px;
+    background:#111;color:#fff;font:600 1rem/1 var(--fb);letter-spacing:.08em;text-align:center}
+  .login-field input:focus{outline:none;border-color:var(--orange)}
+  .login-field input::placeholder{color:rgba(243,229,211,.4)}
+  .login-btn{width:100%;max-width:320px;padding:16px;border:0;border-radius:12px;
+    background:var(--orange);color:#fff;font:800 .9rem/1 var(--fb);letter-spacing:.04em;
+    cursor:pointer;touch-action:manipulation;transition:background .2s}
+  .login-btn:hover{background:var(--orange-light)}
+  .login-btn:disabled{opacity:.5;cursor:default}
+  .login-err{color:var(--orange);font-size:.85rem;margin-top:12px;min-height:20px}
+
+  /* ---- Scanner ---- */
+  .eyebrow{font:700 .7rem/1 var(--fb);letter-spacing:.34em;text-transform:uppercase;
+    color:var(--orange);margin:0;text-align:center}
+  .logo-small{width:48px;height:48px;border-radius:50%;background:var(--cream);
+    display:grid;place-items:center;margin:0 auto 8px;
+    font:800 .8rem/1 var(--fb);color:var(--ink);letter-spacing:.04em}
+  .logo-small img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+  h1{margin:0;text-align:center;font:800 clamp(2.2rem,9vw,3.2rem)/1.02 var(--fb);
+    letter-spacing:-.02em;color:#fff}
   h1 em{font-style:normal;color:var(--orange)}
-  .lede{margin:0 auto;max-width:34ch;text-align:center;font:400 .95rem/1.6 var(--fb);color:var(--dim)}
+
   .cam{background:#111;border:1px solid #1F1F1F;border-radius:18px;overflow:hidden;position:relative}
   #reader{width:100%;background:#000;min-height:300px}
   #reader video{object-fit:cover!important}
   #reader__dashboard_section_csr button,#reader__dashboard_section_swapoff{display:none!important}
   #reader__dashboard,#reader__dashboard_section{padding:0!important}
   #reader__status_span,#reader__header_message{display:none!important}
-  .frame{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(70%,300px);aspect-ratio:1;pointer-events:none;z-index:3}
+  .frame{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:min(70%,300px);aspect-ratio:1;pointer-events:none;z-index:3}
   .frame i{position:absolute;width:26px;height:26px;border:3px solid var(--orange)}
   .frame i.tl{top:0;left:0;border-right:0;border-bottom:0;border-top-left-radius:12px}
   .frame i.tr{top:0;right:0;border-left:0;border-bottom:0;border-top-right-radius:12px}
@@ -31,72 +70,215 @@
   .frame i.br{bottom:0;right:0;border-left:0;border-top:0;border-bottom-right-radius:12px}
   .hint{padding:14px 18px;margin:0;text-align:center;font:400 .88rem/1.5 var(--fb);color:var(--dim)}
   .actions{display:flex;gap:10px;padding:0 18px 18px}
-  .btn{flex:1;border:0;border-radius:12px;padding:16px;font:800 .9rem/1 var(--fb);cursor:pointer;touch-action:manipulation}
+  .btn{flex:1;border:0;border-radius:12px;padding:16px;font:800 .9rem/1 var(--fb);
+    cursor:pointer;touch-action:manipulation;transition:transform .15s}
+  .btn:active{transform:scale(.97)}
   .primary{background:var(--orange);color:#fff}
   .ghost{background:#1A1A1A;color:var(--cream);border:1px solid #262626}
-  .alt{text-align:center;font:600 .8rem/1.5 var(--fb);color:var(--dim);text-decoration:none;letter-spacing:.06em}
-  .alt:hover{color:var(--cream)}
+
+  /* ---- Result cards ---- */
+  .result{border-radius:18px;padding:28px 22px;text-align:center;
+    animation:resultIn .4s cubic-bezier(.22,1,.36,1) both}
+  @keyframes resultIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .result.ok{background:linear-gradient(180deg,#0F2A1E 0%,#0B0B0B 100%);border:1px solid rgba(31,122,77,.4)}
+  .result.warn{background:linear-gradient(180deg,#2A1F0A 0%,#0B0B0B 100%);border:1px solid rgba(184,134,11,.4)}
+  .result.err{background:linear-gradient(180deg,#2A0F0F 0%,#0B0B0B 100%);border:1px solid rgba(176,58,46,.4)}
+  .result .big-ico{width:74px;height:74px;border-radius:50%;margin:0 auto 18px;
+    display:grid;place-items:center;font-size:2rem;font-weight:800}
+  .result.ok .big-ico{background:rgba(31,122,77,.2);color:#4FD38F}
+  .result.warn .big-ico{background:rgba(184,134,11,.2);color:#E8C46A}
+  .result.err .big-ico{background:rgba(176,58,46,.2);color:#F28B7E}
+  .result h2{margin:0 0 6px;font:800 clamp(1.6rem,5.5vw,2.1rem)/1.1 var(--fb);
+    letter-spacing:-.01em;color:#fff;text-transform:uppercase}
+  .result .name{font:800 1.4rem/1.2 var(--fb);color:#fff;margin:14px 0 4px}
+  .result .sub{font:400 .9rem/1.5 var(--fb);color:var(--dim);margin:0 0 14px}
+  .result .meta{display:flex;flex-direction:column;gap:6px;margin-top:16px;
+    padding-top:16px;border-top:1px dashed rgba(243,229,211,.15)}
+  .result .meta .row{display:flex;justify-content:space-between;gap:10px;font:500 .85rem/1.4 var(--fb)}
+  .result .meta .k{color:var(--dim);letter-spacing:.14em;text-transform:uppercase;font-size:.68rem;font-weight:700}
+  .result .meta .v{color:#fff;font-weight:800;letter-spacing:.04em;text-align:right}
+  .result .btn{margin-top:20px}
+
+  .foot{margin-top:auto;padding-top:20px;text-align:center;
+    font:600 .7rem/1.6 var(--fb);letter-spacing:.26em;text-transform:uppercase;color:var(--dim)}
+  .foot strong{color:var(--orange-light)}
+
+  @media (prefers-reduced-motion:reduce){
+    .result{animation:none!important}
+  }
 </style>
 </head>
 <body>
 <main class="wrap">
-  <p class="eyebrow">WWN · Event Day</p>
-  <h1>Point.<br><em>Scan.</em><br>Welcome.</h1>
-  <p class="lede">Your browser will ask for camera permission on this page. Allow it once — then scanning is hands-free.</p>
-  <div class="cam">
-    <div id="reader"></div>
-    <div class="frame" id="frame" hidden><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
-    <p class="hint" id="hint">Starting camera…</p>
-    <div class="actions">
-      <button class="btn primary" id="start" type="button">Start camera</button>
-      <button class="btn ghost" id="stop" type="button" hidden>Stop</button>
+
+  <!-- LOGIN GATE -->
+  <div class="login" id="loginScreen">
+    <div class="login-logo" id="loginLogo">WWN</div>
+    <h1>Welcome,<br>staff.</h1>
+    <p>Enter your staff key to access the event-day scanner.</p>
+    <div class="login-field">
+      <input type="password" id="keyInput" placeholder="Staff key" autocomplete="off">
     </div>
+    <button class="login-btn" id="loginBtn">Unlock scanner</button>
+    <div class="login-err" id="loginErr"></div>
   </div>
-  <a class="alt" id="terminal" href="#">Or open the check-in terminal</a>
+
+  <!-- SCANNER -->
+  <div id="scannerScreen" hidden>
+    <div class="logo-small" id="scanLogo">WWN</div>
+    <p class="eyebrow">WWN · Event Day</p>
+    <h1>Point.<br><em>Scan.</em><br>Welcome.</h1>
+
+    <div class="cam">
+      <div id="reader"></div>
+      <div class="frame" id="frame" hidden><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+      <p class="hint" id="hint">Starting camera…</p>
+      <div class="actions">
+        <button class="btn primary" id="start" type="button">Start camera</button>
+        <button class="btn ghost" id="stop" type="button" hidden>Stop</button>
+      </div>
+    </div>
+
+    <div id="resultArea"></div>
+  </div>
+
+  <footer class="foot">Powered by <strong>WWN</strong> · Make room for presence</footer>
 </main>
+
 <script>
 (function () {
   'use strict';
+
   var EXEC = 'https://script.google.com/macros/s/AKfycbyiF5Umx_LlTxCU2FJy55r91ykLAh-FWPRWAxVacgY9BLS4dY1gx8SXmchhkNBdVT5_/exec';
-  var K = '';
-  try { K = new URLSearchParams(window.location.search).get('k') || ''; } catch (e) {}
-  document.getElementById('terminal').href = EXEC + '?path=checkin&k=' + encodeURIComponent(K);
+  var SESSION_KEY = 'wwn-staff-key';
+
+  var loginScreen = document.getElementById('loginScreen');
+  var scannerScreen = document.getElementById('scannerScreen');
+  var keyInput = document.getElementById('keyInput');
+  var loginBtn = document.getElementById('loginBtn');
+  var loginErr = document.getElementById('loginErr');
+  var loginLogo = document.getElementById('loginLogo');
+  var scanLogo = document.getElementById('scanLogo');
 
   var hint = document.getElementById('hint');
   var frame = document.getElementById('frame');
   var startB = document.getElementById('start');
   var stopB = document.getElementById('stop');
+  var resultArea = document.getElementById('resultArea');
 
-  var qr = null, on = false, last = 0, handing = false;
+  var qr = null, on = false, last = 0, staffKey = '';
 
-  function handoff(token){
-    if (handing) return;
-    handing = true;
-    hint.textContent = 'Pass read — opening check-in…';
-    window.location.href = EXEC + '?path=checkin&k=' + encodeURIComponent(K) + '&scan=' + encodeURIComponent(token);
+  /* ---- Session management ---- */
+  function getStoredKey(){
+    try { return sessionStorage.getItem(SESSION_KEY) || ''; } catch (e) { return ''; }
   }
-  function got(txt){
-    var now = Date.now();
-    if (now - last < 2000) return;
-    last = now;
-    var t = String(txt || '').trim();
-    if (!t) return;
-    if (qr && on) qr.stop().then(function(){ handoff(t); }).catch(function(){ handoff(t); });
-    else handoff(t);
+  function storeKey(k){
+    try { sessionStorage.setItem(SESSION_KEY, k); } catch (e) {}
   }
+  function clearKey(){
+    try { sessionStorage.removeItem(SESSION_KEY); } catch (e) {}
+  }
+
+  /* ---- Boot ---- */
+  (function boot(){
+    var stored = getStoredKey();
+    if (stored) {
+      staffKey = stored;
+      loadConfigAndStart();
+    } else {
+      loginScreen.hidden = false;
+      scannerScreen.hidden = true;
+      keyInput.focus();
+    }
+  })();
+
+  /* ---- Login ---- */
+  loginBtn.addEventListener('click', attemptLogin);
+  keyInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') attemptLogin();
+  });
+
+  function attemptLogin(){
+    var k = keyInput.value.trim();
+    if (!k) { loginErr.textContent = 'Please enter your staff key.'; return; }
+    loginBtn.disabled = true;
+    loginErr.textContent = 'Validating…';
+
+    fetch(EXEC, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify({ action: 'validateKey', adminKey: k })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (res) {
+      if (res && res.valid) {
+        staffKey = k;
+        storeKey(k);
+        loadConfigAndStart();
+      } else {
+        loginErr.textContent = 'Invalid staff key. Please try again.';
+        loginBtn.disabled = false;
+      }
+    })
+    .catch(function (err) {
+      loginErr.textContent = 'Connection issue. Please try again.';
+      loginBtn.disabled = false;
+    });
+  }
+
+  /* ---- Load config + start scanner ---- */
+  function loadConfigAndStart(){
+    fetch(EXEC, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify({ action: 'getPublicConfig', adminKey: staffKey })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (cfg) {
+      if (cfg && cfg.logoUrl) {
+        var img = new Image();
+        img.onload = function () {
+          loginLogo.innerHTML = '<img src="' + cfg.logoUrl + '" alt="WWN">';
+          scanLogo.innerHTML = '<img src="' + cfg.logoUrl + '" alt="WWN">';
+        };
+        img.src = cfg.logoUrl;
+      }
+      showScanner();
+    })
+    .catch(function () {
+      showScanner();
+    });
+  }
+
+  function showScanner(){
+    loginScreen.hidden = true;
+    scannerScreen.hidden = false;
+    setTimeout(start, 250);
+  }
+
+  /* ---- Camera ---- */
   function start(){
-    if (on || handing) return;
-    if (!K) { hint.innerHTML = '<span style="color:#F97B4F">Missing staff key. Open this page from your staff link: scan.html?k=YOUR_KEY</span>'; return; }
-    if (typeof Html5Qrcode === 'undefined') { hint.innerHTML = '<span style="color:#F97B4F">Scanner library failed to load. Check your connection.</span>'; return; }
+    if (on) return;
+    if (typeof Html5Qrcode === 'undefined') {
+      hint.innerHTML = '<span style="color:#F97B4F">Scanner library failed to load. Check your connection.</span>';
+      return;
+    }
     startB.disabled = true;
     hint.textContent = 'Requesting camera…';
     if (!qr) qr = new Html5Qrcode('reader', { verbose: false });
+
     Html5Qrcode.getCameras().then(function (cams) {
-      if (!cams || !cams.length) { hint.textContent = 'No camera found on this device.'; startB.disabled = false; return null; }
+      if (!cams || !cams.length) {
+        hint.textContent = 'No camera found on this device.';
+        startB.disabled = false;
+        return null;
+      }
       var rear = null;
       for (var i = 0; i < cams.length; i++) {
         var l = (cams[i].label || '').toLowerCase();
-        if (l.indexOf('back') !== -1 || l.indexOf('rear') !== -1 || l.indexOf('environment') !== -1) { rear = cams[i]; break; }
+        if (l.indexOf('back') !== -1 || l.indexOf('rear') !== -1 || l.indexOf('environment') !== -1) {
+          rear = cams[i]; break;
+        }
       }
       return qr.start(rear ? rear.id : cams[cams.length - 1].id,
         { fps: 12, qrbox: { width: 250, height: 250 } }, got, function () {});
@@ -110,6 +292,7 @@
       startB.disabled = false;
     });
   }
+
   function stop(){
     if (!on || !qr) return;
     qr.stop().then(function(){
@@ -117,11 +300,100 @@
       startB.disabled = false; hint.textContent = 'Camera paused.';
     }).catch(function(){});
   }
+
   startB.addEventListener('click', start);
   stopB.addEventListener('click', stop);
 
-  /* Ask for permission as early as the platform allows (top-level page = real prompt) */
-  window.addEventListener('load', function(){ if (K) setTimeout(start, 250); });
+  /* ---- Scan handler ---- */
+  function got(txt){
+    var now = Date.now();
+    if (now - last < 2500) return;
+    last = now;
+    var t = String(txt || '').trim();
+    if (!t) return;
+    if (qr && on) qr.stop().then(function(){ checkIn(t); }).catch(function(){ checkIn(t); });
+    else checkIn(t);
+  }
+
+  function checkIn(token){
+    hint.textContent = 'Reading pass…';
+    fetch(EXEC, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify({ action: 'checkin', adminKey: staffKey, token: token })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (res) {
+      if (!res || !res.ok) {
+        renderError(res);
+      } else {
+        renderSuccess(res);
+      }
+    })
+    .catch(function (err) {
+      resultArea.innerHTML = '<div class="result err"><div class="big-ico">!</div>' +
+        '<h2>Connection issue</h2><p class="sub">Please try again.</p>' +
+        '<button class="btn primary" id="retryBtn" type="button">Next attendee</button></div>';
+      wireNext();
+    });
+  }
+
+  function renderSuccess(r){
+    resultArea.innerHTML = '<div class="result ok"><div class="big-ico">✓</div><h2>Checked in</h2>' +
+      '<div class="name">' + esc(r.name || 'Attendee') + '</div>' +
+      '<p class="sub">Welcome to Worship With Nature.</p>' +
+      '<div class="meta">' +
+        metaRow('Ticket', r.ticketId || '') + metaRow('Seat', r.seat || '') +
+        metaRow('Pass', r.type || '') + (r.age != null ? metaRow('Age', r.age) : '') +
+        metaRow('Time', r.checkedInAt || nowTime()) +
+      '</div><button class="btn primary" id="retryBtn" type="button">Next attendee</button></div>';
+    wireNext();
+    if (navigator.vibrate) navigator.vibrate(40);
+  }
+
+  function renderError(r){
+    var kind = (r && r.kind) || 'not_found';
+    if (kind === 'already') {
+      resultArea.innerHTML = '<div class="result warn"><div class="big-ico">✓</div><h2>Already checked in</h2>' +
+        '<div class="name">' + esc(r.name || 'Attendee') + '</div>' +
+        '<p class="sub">This pass was already welcomed in.</p>' +
+        '<div class="meta">' + metaRow('Ticket', r.ticketId || '') + metaRow('Seat', r.seat || '') +
+        metaRow('Time', r.checkedInAt || '') +
+        '</div><button class="btn primary" id="retryBtn" type="button">Next attendee</button></div>';
+    } else if (kind === 'cancelled') {
+      resultArea.innerHTML = '<div class="result err"><div class="big-ico">✕</div><h2>Cancelled ticket</h2>' +
+        '<p class="sub">This pass has been cancelled and cannot be used.</p>' +
+        '<div class="meta">' + metaRow('Ticket', r.ticketId || '') +
+        '</div><button class="btn primary" id="retryBtn" type="button">Next attendee</button></div>';
+    } else if (kind === 'forbidden') {
+      clearKey();
+      location.reload();
+    } else {
+      resultArea.innerHTML = '<div class="result err"><div class="big-ico">?</div><h2>Ticket not found</h2>' +
+        '<p class="sub">Please verify the pass and try again.</p>' +
+        '<button class="btn primary" id="retryBtn" type="button">Next attendee</button></div>';
+    }
+    wireNext();
+  }
+
+  function wireNext(){
+    var rb = document.getElementById('retryBtn');
+    if (!rb) return;
+    rb.addEventListener('click', function () {
+      resultArea.innerHTML = '';
+      setTimeout(start, 150);
+    });
+  }
+
+  function metaRow(k, v){
+    return '<div class="row"><span class="k">' + esc(k) + '</span><span class="v">' + esc(String(v)) + '</span></div>';
+  }
+  function nowTime(){ return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
 })();
 </script>
 </body>
