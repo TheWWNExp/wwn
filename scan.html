@@ -7,6 +7,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>WWN · Event Day</title>
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preload" as="image" href="https://lh3.googleusercontent.com/d/1fICvZGOq6nPAwsCqma6WjitZGbDgYAAW">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300..800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
@@ -14,6 +16,7 @@
     --ink:#0B0B0B;--cream:#F3E5D3;--dim:rgba(243,229,211,.62);
     --orange:#EE4B1F;--orange-light:#F97B4F;
     --ok:#4FD38F;--warn:#E8C46A;--err:#F28B7E;
+    --brand-top:#540A10;
     --fb:'Manrope',-apple-system,sans-serif;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -22,9 +25,44 @@
   body{background:var(--ink);color:var(--cream);font-family:var(--fb);-webkit-text-size-adjust:100%}
   ::selection{background:var(--orange);color:#fff}
 
+  /* ===== PRELOADER (cosmetic only — security gate unchanged) ===== */
+  #splash{position:fixed;inset:0;z-index:200;
+    background-color:var(--ink);
+    background-image:linear-gradient(180deg,var(--brand-top) 0%,rgba(84,10,16,.6) 12%,rgba(11,11,11,0) 38%);
+    display:flex;align-items:center;justify-content:center;opacity:1;
+    transition:opacity .65s ease .05s;cursor:pointer}
+  #splash.off{opacity:0;pointer-events:none}
+  .splash-inner{display:flex;flex-direction:column;align-items:center;gap:16px;
+    will-change:transform,opacity;
+    transition:transform .8s cubic-bezier(.16,1,.3,1), opacity .55s ease}
+  #splash.off .splash-inner{transform:scale(1.45);opacity:0}
+  #splashLogo{height:64px;width:auto;display:block;
+    filter:drop-shadow(0 0 22px rgba(238,75,31,.2));
+    opacity:0;transform:scale(.9);
+    animation:logoIn .9s cubic-bezier(.22,1,.36,1) forwards,
+              logoBreath 2.6s ease-in-out 1s infinite}
+  .splash-fb{height:64px;display:flex;align-items:center;font:800 2rem/1 var(--fb);
+    letter-spacing:-.02em;color:var(--cream);
+    opacity:0;animation:logoIn .9s cubic-bezier(.22,1,.36,1) forwards}
+  .accent-line{width:32px;height:1px;background:var(--orange);opacity:0;
+    animation:fadeUp .9s cubic-bezier(.22,1,.36,1) .5s forwards}
+  .splash-word{font:800 .66rem/1 var(--fb);letter-spacing:.34em;text-transform:uppercase;
+    color:rgba(243,229,211,.6);opacity:0;
+    animation:fadeUp .9s cubic-bezier(.22,1,.36,1) .35s forwards}
+  @keyframes logoIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+  @keyframes logoBreath{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.85}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ===== app settles in (zoom-in) as splash dissolves ===== */
   .app{height:100vh;height:100dvh;display:flex;flex-direction:column;
     padding:calc(12px + env(safe-area-inset-top)) 14px calc(10px + env(safe-area-inset-bottom));
-    gap:10px;max-width:640px;margin:0 auto}
+    gap:10px;max-width:640px;margin:0 auto;
+    opacity:0;transform:scale(1.06);filter:blur(12px);
+    will-change:opacity,transform,filter;
+    transition:opacity .55s ease .08s,
+               transform 1s cubic-bezier(.16,1,.3,1) .08s,
+               filter 1s cubic-bezier(.16,1,.3,1) .08s}
+  body.revealed .app{opacity:1;transform:scale(1);filter:blur(0)}
 
   .head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex:none}
   .logo{height:34px;width:auto;max-width:150px;object-fit:contain;display:block}
@@ -145,10 +183,25 @@
 
   @media (prefers-reduced-motion:reduce){
     .sheet,.frame .beam,.live.on .dot,.sheet.s-load .ico{animation:none!important}
+    #splashLogo,.splash-fb,.accent-line,.splash-word{animation:none!important;opacity:1!important;transform:none!important}
+    #splash,.splash-inner{transition:none!important}
+    .app{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}
   }
 </style>
 </head>
 <body>
+
+<!-- ===== PRELOADER ===== -->
+<div id="splash">
+  <div class="splash-inner">
+    <img id="splashLogo" src="https://lh3.googleusercontent.com/d/1fICvZGOq6nPAwsCqma6WjitZGbDgYAAW"
+         alt="Worship With Nature"
+         onerror="this.outerHTML='<span class=splash-fb>WWN</span>'">
+    <div class="accent-line"></div>
+    <span class="splash-word">Event Day</span>
+  </div>
+</div>
+
 <div class="app">
 
   <div class="head">
@@ -192,6 +245,8 @@
   var EXEC = 'https://script.google.com/macros/s/AKfycbyiF5Umx_LlTxCU2FJy55r91ykLAh-FWPRWAxVacgY9BLS4dY1gx8SXmchhkNBdVT5_/exec';
   var staffKey = '';
 
+  var splash = document.getElementById('splash');
+  var appEl = document.querySelector('.app');
   var logoWrap = document.getElementById('logoWrap');
   var logoutBtn = document.getElementById('logoutBtn');
   var frame = document.getElementById('frame');
@@ -212,6 +267,39 @@
 
   logoWrap.innerHTML = '<div class="logo-fb">WWN</div>';
 
+  /* ===== PRELOADER REVEAL (cosmetic; gate security unchanged) ===== */
+  var revealed = false;
+  function reveal(){
+    if (revealed) return;
+    revealed = true;
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      document.body.classList.add('revealed');
+      splash.classList.add('off');
+      setTimeout(function(){ splash.style.display = 'none'; }, 950);
+      setTimeout(function(){
+        var g = document.getElementById('gateKey');
+        if (g && document.activeElement !== g) g.focus();
+      }, 700);
+    });});
+  }
+  splash.addEventListener('click', reveal);
+  document.addEventListener('keydown', function (e) {
+    if (revealed) return;
+    var tag = (document.activeElement && document.activeElement.tagName) || '';
+    if (tag === 'INPUT') return;               /* let the login input behave normally */
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); reveal(); }
+  });
+  window.addEventListener('load', function(){ setTimeout(reveal, 400); });
+  setTimeout(reveal, 5000);                     /* safety net */
+  appEl.addEventListener('transitionend', function (e) {
+    if (e.propertyName === 'transform') {
+      appEl.style.transform = 'none';
+      appEl.style.filter = 'none';
+      appEl.style.willChange = 'auto';
+    }
+  });
+
+  /* ===== SECURITY GATE + SCANNER (unchanged logic) ===== */
   (function boot(){ showLoginGate(); })();
 
   function showLoginGate(){
@@ -222,7 +310,7 @@
       'color:#fff;font:600 .95rem/1 Manrope,sans-serif;letter-spacing:.1em;text-align:center" autocomplete="off"></div>';
     startBtn.textContent = 'Unlock scanner';
     startBtn.onclick = attemptLogin;
-    setTimeout(function(){ var g = document.getElementById('gateKey'); if (g) g.focus(); }, 60);
+    setTimeout(function(){ var g = document.getElementById('gateKey'); if (g && revealed) g.focus(); }, 60);
   }
 
   function attemptLogin(){
