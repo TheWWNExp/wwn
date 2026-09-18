@@ -22,12 +22,10 @@
   body{background:var(--ink);color:var(--cream);font-family:var(--fb);-webkit-text-size-adjust:100%}
   ::selection{background:var(--orange);color:#fff}
 
-  /* ===== FIXED VIEWPORT SHELL (no page scroll) ===== */
   .app{height:100vh;height:100dvh;display:flex;flex-direction:column;
     padding:calc(12px + env(safe-area-inset-top)) 14px calc(10px + env(safe-area-inset-bottom));
     gap:10px;max-width:640px;margin:0 auto}
 
-  /* ---- header ---- */
   .head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex:none}
   .logo{height:34px;width:auto;max-width:150px;object-fit:contain;display:block}
   .logo-fb{height:34px;display:flex;align-items:center;font:800 1.05rem/1 var(--fb);
@@ -37,7 +35,6 @@
     text-transform:uppercase;cursor:pointer;transition:all .2s}
   .logout:hover{border-color:var(--orange);color:var(--orange)}
 
-  /* ---- title ---- */
   .title{flex:none;text-align:center}
   .title .eyebrow{font:700 .62rem/1 var(--fb);letter-spacing:.34em;text-transform:uppercase;
     color:var(--orange);margin:0 0 4px}
@@ -45,12 +42,10 @@
   .title h1 em{font-style:normal;color:var(--orange)}
   @media (max-height:640px){ .title h1{font-size:1.35rem} .title .eyebrow{display:none} }
 
-  /* ---- camera stage ---- */
   .stage{flex:1;min-height:0;position:relative;border-radius:20px;overflow:hidden;
     background:#000;border:1px solid #1C1C1C}
   #reader{position:absolute;inset:0}
   #reader video{width:100%!important;height:100%!important;object-fit:cover!important}
-  /* neutralise library chrome + its green qrbox border */
   #reader__dashboard,#reader__dashboard_section,#reader__status_span,#reader__header_message,
   #reader__dashboard_section_csr,#reader__dashboard_section_swapoff{display:none!important}
   [id*="qrbox"],#reader__scan_region__qrbox{border:none!important;box-shadow:none!important;background:transparent!important}
@@ -73,7 +68,6 @@
     15%{opacity:.9}50%{transform:translateY(0)}85%{opacity:.9}
     100%{transform:translateY(90px);opacity:0}}
 
-  /* status strip over camera bottom */
   .statusbar{position:absolute;left:0;right:0;bottom:0;z-index:4;
     display:flex;justify-content:space-between;align-items:center;gap:10px;
     padding:26px 14px 12px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.82))}
@@ -88,14 +82,12 @@
     display:grid;place-items:center;transition:all .2s}
   .kb:hover{color:#fff;border-color:rgba(255,255,255,.3)}
 
-  /* camera-start overlay */
   .camover{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;
     align-items:center;justify-content:center;gap:14px;background:rgba(8,8,8,.86);
     backdrop-filter:blur(4px);text-align:center;padding:20px}
   .camover p{margin:0;max-width:30ch;font:400 .88rem/1.55 var(--fb);color:var(--dim)}
   .camover .btn{width:min(260px,80%)}
 
-  /* manual entry row */
   .manual{flex:none;display:flex;gap:8px}
   .manual input{flex:1;min-width:0;padding:13px 14px;border:1px solid #262626;border-radius:12px;
     background:#111;color:#fff;font:600 .95rem/1 var(--fb);letter-spacing:.08em;text-transform:uppercase}
@@ -110,7 +102,6 @@
   .btn.primary{background:var(--orange);color:#fff}
   .btn.primary:hover{background:var(--orange-light)}
 
-  /* ===== MODAL POPUP ===== */
   .modal{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
     padding:16px;background:rgba(4,4,4,.74);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
   .sheet{width:min(430px,100%);max-height:88vh;max-height:88dvh;overflow-y:auto;
@@ -190,7 +181,6 @@
   </div>
 </div>
 
-<!-- ===== RESULT POPUP ===== -->
 <div class="modal" id="modal" hidden>
   <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
 </div>
@@ -200,8 +190,6 @@
   'use strict';
 
   var EXEC = 'https://script.google.com/macros/s/AKfycbyiF5Umx_LlTxCU2FJy55r91ykLAh-FWPRWAxVacgY9BLS4dY1gx8SXmchhkNBdVT5_/exec';
-
-  /* in-memory only — reload/close = logged out */
   var staffKey = '';
 
   var logoWrap = document.getElementById('logoWrap');
@@ -224,11 +212,7 @@
 
   logoWrap.innerHTML = '<div class="logo-fb">WWN</div>';
 
-  /* ================= LOGIN ================= */
-  (function boot(){
-    /* no persistence: every load shows login via prompt-less gate below */
-    showLoginGate();
-  })();
+  (function boot(){ showLoginGate(); })();
 
   function showLoginGate(){
     camOver.hidden = false;
@@ -244,7 +228,7 @@
   function attemptLogin(){
     var g = document.getElementById('gateKey');
     var k = g ? g.value.trim() : '';
-    if (!k) { camMsg.insertAdjacentHTML('beforebegin', ''); flashGate('Please enter your staff key.'); return; }
+    if (!k) { flashGate('Please enter your staff key.'); return; }
     startBtn.disabled = true;
     startBtn.textContent = 'Validating…';
     api({ action: 'validateKey', adminKey: k }).then(function (res) {
@@ -289,11 +273,9 @@
     startBtn.textContent = 'Start camera';
     startBtn.disabled = false;
     startBtn.onclick = function(){ startCamera(); };
-    /* auto-attempt: browser will show its permission prompt */
     startCamera();
   }
 
-  /* ================= CAMERA (persistent, pause/resume) ================= */
   function setLive(state, txt){
     liveTag.className = 'live' + (state ? ' ' + state : '');
     liveTxt.textContent = txt;
@@ -338,8 +320,7 @@
 
   function pauseCamera(){
     if (!qr || !running) return;
-    try { qr.pause(true); }
-    catch (e) { /* pause unsupported: leave running, modal blocks scans anyway */ }
+    try { qr.pause(true); } catch (e) {}
   }
   function resumeCamera(){
     if (!qr || !running) { startCamera(); return; }
@@ -348,7 +329,6 @@
     setLive('on', 'Live — point at a QR');
   }
 
-  /* ================= DETECT ================= */
   function onDetect(txt){
     if (modalOpen || holding) return;
     var now = Date.now();
@@ -376,7 +356,6 @@
       });
   }
 
-  /* ================= RESULT POPUP ================= */
   function openSheet(html, cls){
     sheet.className = 'sheet ' + (cls || '');
     sheet.innerHTML = html;
@@ -410,6 +389,7 @@
       html += metaRow(r.party && r.party.length > 1 ? 'Seats' : 'Seat',
                       r.party && r.party.length > 1 ? seatsOf(r.party) : (r.seat || ''));
       html += metaRow('Pass', r.type || '');
+      if (r.bookedAt) html += metaRow('Booked', r.bookedAt);
       if (r.checkedInAt) html += metaRow('Time', r.checkedInAt);
       html += '</div>';
     }
@@ -456,7 +436,6 @@
   modal.addEventListener('click', function (e) { if (e.target === modal) closeSheet(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modalOpen) closeSheet(); });
 
-  /* ================= MANUAL ENTRY (PRD §18 fallback) ================= */
   kbBtn.addEventListener('click', function () {
     manualRow.hidden = !manualRow.hidden;
     if (!manualRow.hidden) manualId.focus();
@@ -470,10 +449,7 @@
     processCode(v);
   }
 
-  /* ================= LOGOUT ================= */
-  logoutBtn.addEventListener('click', function () {
-    teardownToLogin();
-  });
+  logoutBtn.addEventListener('click', function () { teardownToLogin(); });
   function teardownToLogin(){
     staffKey = '';
     modalOpen = false; holding = false;
@@ -484,7 +460,6 @@
     setLive('', 'Camera off');
   }
 
-  /* keep camera healthy across tab switches */
   document.addEventListener('visibilitychange', function () {
     if (!running || modalOpen) return;
     if (document.hidden) { try { qr.pause(true); } catch (e) {} }
@@ -492,7 +467,6 @@
   });
   window.addEventListener('beforeunload', function () { staffKey = ''; });
 
-  /* ================= HELPERS ================= */
   function api(payload){
     return fetch(EXEC, {
       method: 'POST',
